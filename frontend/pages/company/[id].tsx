@@ -13,6 +13,25 @@ import {
   Input,
   Button,
 } from '@chakra-ui/react';
+import { VerifiableCredential } from '@web5/credentials';
+
+const a = async () => {
+
+const vc = await VerifiableCredential.create({
+  type: 'EmploymentCredential',
+  issuer: employerDid,
+  subject: employeeDid,
+  expirationDate: '2023-09-30T12:34:56Z',
+  data: {
+      "position": "Software Developer",
+      "startDate": "2023-04-01T12:34:56Z",
+      "employmentStatus": "Contractor"
+  }
+});
+
+console.log(vc);
+};
+
 // you can find sample schemas at https://github.com/iden3/claim-schema-vocab/blob/main/schemas/json
 // or you can create a custom schema using the schema builder: https://certs.dock.io/schemas
 const EmploymentSchema = {
@@ -332,7 +351,6 @@ export default function Home() {
               <h1 className="text-white font-bold text-4xl">
                 Share the claim request link
               </h1>
-
               <p className="text-white mt-1">
                 Share this link with the Employees. They will be presented with a QR code they can scan to get the credentials in their Polygon ID wallet.
               </p>
