@@ -14,13 +14,14 @@ import {
   Button,
 } from '@chakra-ui/react';
 import { VerifiableCredential } from '@web5/credentials';
+import { Web5 } from "@web5/api";
 
 const a = async () => {
-
+  const {web5, did: userDid} = await Web5.connect();
 const vc = await VerifiableCredential.create({
   type: 'EmploymentCredential',
-  issuer: employerDid,
-  subject: employeeDid,
+  issuer: 'did:dht:fhzeks5bkferfztk6m63xjkg7a4hbf7snk444g8f1h1xapt391ty',
+  subject: 'did:dht:fhzeks5bkferfztk6m63xjkg7a4hbf7snk444g8f1h1xapt391ty',
   expirationDate: '2023-09-30T12:34:56Z',
   data: {
       "position": "Software Developer",
@@ -29,7 +30,11 @@ const vc = await VerifiableCredential.create({
   }
 });
 
-console.log(vc);
+console.log(vc, web5, userDid);
+
+const vc_jwt_employment = await vc.sign({ did: userDid });
+
+console.log(vc_jwt_employment);
 };
 
 // you can find sample schemas at https://github.com/iden3/claim-schema-vocab/blob/main/schemas/json
@@ -164,6 +169,7 @@ export default function Home() {
                 className="p-5"
                 style={{ maxWidth: '500px', margin: '0 auto' }}>
                 <h1 className="text-gray-800 font-bold text-2xl mb-6">Create a Polygon Issuer for your Company</h1>
+                <button onClick={a}>Click</button>
                 <div className="flex items-center border-2 mb-8 py-2 px-3 rounded-2xl">
                   <input
                     id="name"
