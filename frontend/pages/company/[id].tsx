@@ -15,7 +15,7 @@ import {
 } from '@chakra-ui/react';
 import { VerifiableCredential } from '@web5/credentials';
 import { Web5 } from "@web5/api";
-
+import { DidKeyMethod, DidDhtMethod, DidIonMethod } from '@web5/dids';
 
 // you can find sample schemas at https://github.com/iden3/claim-schema-vocab/blob/main/schemas/json
 // or you can create a custom schema using the schema builder: https://certs.dock.io/schemas
@@ -60,27 +60,6 @@ export default function Home() {
   const [did, setDid] = useState('');
   const [didInfo, setDidInfo] = useState(null);
 
-  const a = async () => {
-
-    const vc = await VerifiableCredential.create({
-      type: 'EmploymentCredential',
-      issuer: 'did:dht:fhzeks5bkferfztk6m63xjkg7a4hbf7snk444g8f1h1xapt391ty', // senders DID
-      subject: 'did:dht:fhzeks5bkferfztk6m63xjkg7a4hbf7snk444g8f1h1xapt391ty', // reciever's DID
-      expirationDate: '2023-09-30T12:34:56Z',
-      data: {
-          "position": "Software Developer",
-          "startDate": "2023-04-01T12:34:56Z",
-          "employmentStatus": "Contractor"
-      }
-    });
-  
-    console.log(vc);
-    
-    const vc_jwt_employment = await vc.sign({ did: myDid , type: 'ES256K-R' });
-    
-    console.log(vc_jwt_employment);
-  };
-
   async function handleGetDidSubmit(e) {
     e.preventDefault();
     try {
@@ -122,15 +101,50 @@ export default function Home() {
       type: ['VerifiableCredential', EmploymentSchema.name],
       subject: EmploymentSchema.populateFunc(credentialData)
     };
-    toast.success(`Credential request created successfully 🚀`);
+
+    
+  // Prerequisites: Create subject (alice)
+    const aliceDid = await DidDhtMethod.create();
+    const ionaliceDid = await DidIonMethod.create();
+
+    const employerDid = await DidDhtMethod.create();
+      const vc = await VerifiableCredential.create({
+        type: 'EmploymentCredential',
+        issuer: employerDid, // senders DID
+        subject: aliceDid, // reciever's DID
+        expirationDate: '2023-09-30T12:34:56Z',
+        data: {
+            "position": "Software Developer",
+            "startDate": "2023-04-01T12:34:56Z",
+            "employmentStatus": "Contractor"
+        }
+      });
+    
+      console.log(vc);
+      toast.success(`Verified Credential request created successfully 🚀`);
+      
+      const vc_jwt_employment = await vc.sign({ did: employerDid });
+      console.log(vc_jwt_employment);
+
+      const { record } = await web5.dwn.records.create({
+        data: vc_jwt_employment,
+        message: {
+          schema: 'EmploymentCredential',
+          dataFormat: 'application/vc+jwt',
+        },
+      });
+      console.log(record,"record");
+      toast.success('Verified Credential request created successfully 🚀');
+      const { status } = await record.send(aliceDid);
+      console.log(status);
     const { data } = await axios.post('../../api/create-credential', credential);
 
     console.log(data);
     setClaimQR(data.qrUrl);
   }
 
-  const setthisup = (did) => {
-    setIssuerProfile(did);
+  const setthisup = () => {
+    setIssuerProfile(myDid);
   }
 
 
@@ -192,18 +206,11 @@ export default function Home() {
             userDid: {myDid ? myDid : "Loading..."}
           </div>
 
-          <button onClick={() => setthisup(did)} className="block w-full bg-blue-600 mt-5 py-2 rounded-full hover:bg-blue-700 hover:-translate-y-1 transition-all duration-250 text-white font-semibold mb-2">
+          <button onClick={() => setthisup()} className="block w-full bg-blue-600 mt-5 py-2 rounded-full hover:bg-blue-700 hover:-translate-y-1 transition-all duration-250 text-white font-semibold mb-2">
             Use this did to Issue VC to your Employees
           </button>
         </form>
 
-        {/* Display DID information */}
-        {didInfo && (
-          <div className="mt-5">
-            <h2 className="text-lg font-semibold">DID Information:</h2>
-            <pre>{JSON.stringify(didInfo, null, 2)}</pre>
-          </div>
-        )}
       </div>
           </div>
         </div>

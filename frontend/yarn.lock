@@ -4379,10 +4379,10 @@
     "@noble/hashes" "1.3.2"
     "@web5/common" "0.2.2"
 
-"@web5/dids@0.2.3":
-  version "0.2.3"
-  resolved "https://registry.npmjs.org/@web5/dids/-/dids-0.2.3.tgz"
-  integrity sha512-Y3PHOavNkSyjBxZQEpKE6XueaqemBO5w0UMOnFh4xH6+5B43ENEE4LHIqVyn2bCpfEBGLXENgDZYqyJphBu0pA==
+"@web5/dids@^0.2.4", "@web5/dids@0.2.4":
+  version "0.2.4"
+  resolved "https://registry.npmjs.org/@web5/dids/-/dids-0.2.4.tgz"
+  integrity sha512-e+m+xgpiM8ydTJgWcPdwmjILLMZYdl2kwahlO22mK0azSKVrg1klpGrUODzqkrWrQ5O0tnOyqEy39FcD5Sy11w==
   dependencies:
     "@decentralized-identity/ion-pow-sdk" "1.0.17"
     "@decentralized-identity/ion-sdk" "1.0.1"
@@ -4395,10 +4395,10 @@
     pkarr "1.1.1"
     z32 "1.0.1"
 
-"@web5/dids@0.2.4":
-  version "0.2.4"
-  resolved "https://registry.npmjs.org/@web5/dids/-/dids-0.2.4.tgz"
-  integrity sha512-e+m+xgpiM8ydTJgWcPdwmjILLMZYdl2kwahlO22mK0azSKVrg1klpGrUODzqkrWrQ5O0tnOyqEy39FcD5Sy11w==
+"@web5/dids@0.2.3":
+  version "0.2.3"
+  resolved "https://registry.npmjs.org/@web5/dids/-/dids-0.2.3.tgz"
+  integrity sha512-Y3PHOavNkSyjBxZQEpKE6XueaqemBO5w0UMOnFh4xH6+5B43ENEE4LHIqVyn2bCpfEBGLXENgDZYqyJphBu0pA==
   dependencies:
     "@decentralized-identity/ion-pow-sdk" "1.0.17"
     "@decentralized-identity/ion-sdk" "1.0.1"
