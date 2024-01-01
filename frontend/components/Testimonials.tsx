@@ -94,7 +94,7 @@ export default function Testimonials() {
       <Container maxW={"7xl"} py={16} as={Stack} spacing={12}>
         <Stack spacing={0} align={"center"}>
           <Heading>What Our Users Say</Heading>
-          <Text>Discover why our users love ZkEmployee 👨🏻‍💻 for verifiable work credentials.</Text>
+          <Text>Discover why our users love W5Employee 👨🏻‍💻 for verifiable work credentials.</Text>
         </Stack>
         <Stack
           direction={{ base: "column", md: "row" }}
@@ -104,7 +104,7 @@ export default function Testimonials() {
             <TestimonialContent>
               <TestimonialHeading>HR Manager Feedback</TestimonialHeading>
               <TestimonialText>
-                &quot;ZkEmployee 👨🏻‍💻 has transformed our work verification process. It's secure, efficient, and essential for HR departments.&quot;
+                &quot;W5Employee 👨🏻‍💻 has transformed our work verification process. It's secure, efficient, and essential for HR departments.&quot;
               </TestimonialText>
             </TestimonialContent>
             <TestimonialAvatar
@@ -117,7 +117,7 @@ export default function Testimonials() {
             <TestimonialContent>
               <TestimonialHeading>Company CEO's View</TestimonialHeading>
               <TestimonialText>
-                &quot;As a CEO, I found ZkEmployee 👨🏻‍💻 incredibly easy and secure to verify work credentials. It streamlines our hiring process and ensures trust in our employees.&quot;
+                &quot;As a CEO, I found W5Employee 👨🏻‍💻 incredibly easy and secure to verify work credentials. It streamlines our hiring process and ensures trust in our employees.&quot;
               </TestimonialText>
             </TestimonialContent>
             <TestimonialAvatar
@@ -130,7 +130,7 @@ export default function Testimonials() {
             <TestimonialContent>
               <TestimonialHeading>Employee Testimonial</TestimonialHeading>
               <TestimonialText>
-                &quot;ZkEmployee 👨🏻‍💻 has made my work journey more secure and convenient. I can easily access and share my work credentials while protecting my privacy.&quot;
+                &quot;W5Employee 👨🏻‍💻 has made my work journey more secure and convenient. I can easily access and share my work credentials while protecting my privacy.&quot;
               </TestimonialText>
             </TestimonialContent>
             <TestimonialAvatar

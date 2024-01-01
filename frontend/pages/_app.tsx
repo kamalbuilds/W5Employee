@@ -14,7 +14,7 @@ function MyApp({ Component, pageProps }) {
   return (
     <>
       <Head>
-        <title>ZKEmployee</title>
+        <title>W5Employee</title>
       </Head>
       <ChakraProvider>
             <div>

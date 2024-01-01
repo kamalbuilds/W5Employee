@@ -1,5 +1,5 @@
 // @ts-nocheck
-import React, { useState } from 'react';
+import React, { useState , useEffect} from 'react';
 import axios from 'axios';
 import { getUnixTime } from 'date-fns/fp';
 import DatePicker from 'react-datepicker';
@@ -16,26 +16,6 @@ import {
 import { VerifiableCredential } from '@web5/credentials';
 import { Web5 } from "@web5/api";
 
-const a = async () => {
-  const {web5, did: userDid} = await Web5.connect();
-const vc = await VerifiableCredential.create({
-  type: 'EmploymentCredential',
-  issuer: 'did:dht:fhzeks5bkferfztk6m63xjkg7a4hbf7snk444g8f1h1xapt391ty',
-  subject: 'did:dht:fhzeks5bkferfztk6m63xjkg7a4hbf7snk444g8f1h1xapt391ty',
-  expirationDate: '2023-09-30T12:34:56Z',
-  data: {
-      "position": "Software Developer",
-      "startDate": "2023-04-01T12:34:56Z",
-      "employmentStatus": "Contractor"
-  }
-});
-
-console.log(vc, web5, userDid);
-
-const vc_jwt_employment = await vc.sign({ did: userDid });
-
-console.log(vc_jwt_employment);
-};
 
 // you can find sample schemas at https://github.com/iden3/claim-schema-vocab/blob/main/schemas/json
 // or you can create a custom schema using the schema builder: https://certs.dock.io/schemas
@@ -65,6 +45,9 @@ export default function Home() {
   const { id } = router.query;
   const [issuerName, setIssuerName] = useState(id);
   const [issuerProfile, setIssuerProfile] = useState();
+  const [web5, setWeb5] = useState(null);
+  const [myDid, setMyDid] = useState(null);
+  const [recipientDid, setRecipientDid] = useState("");
   const [credentialData, setCredentialData] = useState({
     schema: EmploymentSchema.url,
     subject: {
@@ -76,6 +59,27 @@ export default function Home() {
   });
   const [did, setDid] = useState('');
   const [didInfo, setDidInfo] = useState(null);
+
+  const a = async () => {
+
+    const vc = await VerifiableCredential.create({
+      type: 'EmploymentCredential',
+      issuer: 'did:dht:fhzeks5bkferfztk6m63xjkg7a4hbf7snk444g8f1h1xapt391ty', // senders DID
+      subject: 'did:dht:fhzeks5bkferfztk6m63xjkg7a4hbf7snk444g8f1h1xapt391ty', // reciever's DID
+      expirationDate: '2023-09-30T12:34:56Z',
+      data: {
+          "position": "Software Developer",
+          "startDate": "2023-04-01T12:34:56Z",
+          "employmentStatus": "Contractor"
+      }
+    });
+  
+    console.log(vc);
+    
+    const vc_jwt_employment = await vc.sign({ did: myDid , type: 'ES256K-R' });
+    
+    console.log(vc_jwt_employment);
+  };
 
   async function handleGetDidSubmit(e) {
     e.preventDefault();
@@ -129,6 +133,20 @@ export default function Home() {
     setIssuerProfile(did);
   }
 
+
+  useEffect(() => {
+    const initWeb5 = async () => {
+      localStorage.clear();
+      console.log("i am called");
+      const { web5, did : userDid } = await Web5.connect();
+      setWeb5(web5);
+      setMyDid(userDid);
+      console.log(web5, userDid);
+    };
+    initWeb5();
+  }, []);
+
+
   // first screen
   if (!issuerProfile) {
     return (
@@ -149,11 +167,11 @@ export default function Home() {
                 width: '100%',
               }}>
               <h1 className="text-white font-bold text-4xl">
-                Issue Verified Polygon ID Credentials with Dock
+                Issue Verified Credentials using our Beautiful UI
               </h1>
 
               <p className="text-white mt-1">
-                As a Company issue Certificates to your employees on Polygon ID.
+                As a Company issue DID Certificates to your employees.
               </p>
               <br />
               <br />
@@ -163,60 +181,19 @@ export default function Home() {
           <div
             className="flex w-full lg:w-1/2 justify-center items-center bg-white space-y-8"
             style={{ width: '100%' }}>
-            <div className="w-full px-8 md:px-32 lg:px-24">
-              <form
-                onSubmit={handleGenerateProfileSubmit}
-                className="p-5"
-                style={{ maxWidth: '500px', margin: '0 auto' }}>
-                <h1 className="text-gray-800 font-bold text-2xl mb-6">Create a Polygon Issuer for your Company</h1>
-                <button onClick={a}>Click</button>
-                <div className="flex items-center border-2 mb-8 py-2 px-3 rounded-2xl">
-                  <input
-                    id="name"
-                    className=" pl-2 w-full outline-none border-none"
-                    name="name"
-                    placeholder={`Issuer name ${id}`}
-                    value={issuerName}
-                    onChange={(event) =>
-                      setIssuerName(event.target.value)}
-                  />
-                </div>
-
-                <button
-                  disabled={!issuerName}
-                  type="submit"
-                  className="block w-full bg-blue-600 mt-5 py-2 rounded-full hover:bg-blue-700 hover:-translate-y-1 transition-all duration-250 text-white font-semibold mb-2">
-                  Create
-                </button>
-
-              </form>
-            </div>
 
         <div className="w-full px-8 md:px-32 lg:px-24">
         <form
           onSubmit={handleGetDidSubmit}
           className="p-5"
           style={{ maxWidth: '500px', margin: '0 auto' }}>
-          <h1 className="text-gray-800 font-bold text-2xl mb-6">Get DID Information</h1>
+          <h1 className="text-gray-800 font-bold text-2xl mb-6">Your DID</h1>
           <div className="flex items-center border-2 mb-8 py-2 px-3 rounded-2xl">
-            <input
-              id="did"
-              className=" pl-2 w-full outline-none border-none"
-              name="did"
-              placeholder="Enter DID"
-              value={did}
-              onChange={(event) => setDid(event.target.value)}
-            />
+            userDid: {myDid ? myDid : "Loading..."}
           </div>
 
-          <button
-            type="submit"
-            className="block w-full bg-blue-600 mt-5 py-2 rounded-full hover:bg-blue-700 hover:-translate-y-1 transition-all duration-250 text-white font-semibold mb-2">
-            Get DID Information
-          </button>
-
           <button onClick={() => setthisup(did)} className="block w-full bg-blue-600 mt-5 py-2 rounded-full hover:bg-blue-700 hover:-translate-y-1 transition-all duration-250 text-white font-semibold mb-2">
-            Use this as Issuer issuerprofile
+            Use this did to Issue VC to your Employees
           </button>
         </form>
 

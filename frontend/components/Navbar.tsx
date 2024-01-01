@@ -66,7 +66,7 @@ export default function WithSubnavigation() {
             color={useColorModeValue("gray.800", "white")}
           >
             <Button as="a" href="/" variant={"link"}>
-              ZKEmployee 💻
+              W5Employee 💻
             </Button>
           </Text>
 
