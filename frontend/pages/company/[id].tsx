@@ -17,29 +17,6 @@ import { VerifiableCredential } from '@web5/credentials';
 import { Web5 } from "@web5/api";
 import { DidKeyMethod, DidDhtMethod, DidIonMethod } from '@web5/dids';
 
-// you can find sample schemas at https://github.com/iden3/claim-schema-vocab/blob/main/schemas/json
-// or you can create a custom schema using the schema builder: https://certs.dock.io/schemas
-const EmploymentSchema = {
-    url: 'https://schema.dock.io/ProofOfEmployment-V1-1698558436855.json', // Updated schema URL
-    name: 'Proof Of Employment', // Updated schema name
-    populateFunc(data) {
-      // Updated populateFunc to match the new schema
-      return {
-        issuanceDate: data.subject.issuanceDate,
-        issuer: data.subject.numberOfYearsWorkedInTheCompany,
-        designation: data.subject.designation,
-        companyName: data.subject.companyName,
-        id: data.subject.id,
-      };
-    },
-  };
-
-  const axiosHeaders = {
-    headers: {
-      'DOCK-API-TOKEN': process.env.NEXT_PUBLIC_APP_DOCK_API_TOKEN,
-    },
-  };
-
 export default function Home() {
   const router = useRouter();
   const { id } = router.query;
@@ -49,7 +26,6 @@ export default function Home() {
   const [myDid, setMyDid] = useState(null);
   const [recipientDid, setRecipientDid] = useState("");
   const [credentialData, setCredentialData] = useState({
-    schema: EmploymentSchema.url,
     subject: {
       companyName: '',
       designation: '',
@@ -57,8 +33,6 @@ export default function Home() {
       id: '',
     },
   });
-  const [did, setDid] = useState('');
-  const [didInfo, setDidInfo] = useState(null);
 
   const [claimQR, setClaimQR] = useState('');
 
@@ -154,7 +128,7 @@ export default function Home() {
   })
 
     const employerDid = await DidDhtMethod.create();
-
+  console.log('ionvsmydid',ionemployerDid, myDid);
       const vc = await VerifiableCredential.create({
         type: 'EmploymentCredential',
         issuer: ionemployerDid, // senders DID
