@@ -60,39 +60,71 @@ export default function Home() {
   const [did, setDid] = useState('');
   const [didInfo, setDidInfo] = useState(null);
 
-  async function handleGetDidSubmit(e) {
-    e.preventDefault();
-    try {
-      // Make a request to fetch the DID information
-      const encodedDid = encodeURIComponent(did);
-      console.log(encodedDid);
-      const apiUrl = `https://api-testnet.dock.io/dids/${encodedDid}`;
-  
-      // Now, make the API request using apiUrl
-      // const data  = await axios.get('https://api-testnet.dock.io/dids/did%3Apolygonid%3Apolygon%3Amumbai%3A2qD9vqm2pmDyoN6KjxA5EoQLhBt6jd4vdrZoULopCv', axiosHeaders);
-  
-      const didResp = await axios.get(apiUrl, axiosHeaders);
-      console.log(didResp);
-      toast.success(`DID fetched successfully 🪔`);
-      setDidInfo(didResp.data);
-    } catch (error) {
-      console.error(error);
-    }
-  }
   const [claimQR, setClaimQR] = useState('');
 
-  async function handleGenerateProfileSubmit(e) {
-    e.preventDefault();
-    const { data } = await axios.post('../api/create-did/', { issuerName });
-    toast.success(`${data.did} created successfully 🚀`);
-    console.log(data);
-    setIssuerProfile(data);
-  }
-  console.log(issuerProfile,"issuerprofile")
+  const createProtocolDefinition = () => {
+    const W5EmployeeProtocolDefinition = {
+      protocol: "https://w5employee.vercel.app/protocol2",
+      published: true,
+      types: {
+        vc: {
+          schema: 'https://w5employee.vercel.app/schema',
+          dataFormats: ["application/vc+jwt"],
+        },
+      },
+      structure: {
+        vc: {
+          $actions: [
+            { who: "anyone", can: "read" },
+            { who: "author", of: "vc", can: "write" },
+            { who: "recipient", of: "vc", can: "read" },
+          ],
+        },
+      },
+    };
+    return W5EmployeeProtocolDefinition;
+  };
   
+  const queryForProtocol = async (web5) => {
+    return await web5.dwn.protocols.query({
+      message: {
+        filter: {
+          protocol: "https://w5employee.vercel.app/protocol2",
+        },
+      },
+    });
+  };
+
+  const installProtocolLocally = async (web5, protocolDefinition) => {
+    return await web5.dwn.protocols.configure({
+      message: {
+        definition: protocolDefinition,
+      },
+    });
+  };
+
+  const configureProtocol = async (web5, did) => {
+    const protocolDefinition = await createProtocolDefinition();
+
+    const { protocols: localProtocol, status: localProtocolStatus } =
+      await queryForProtocol(web5);
+    console.log({ localProtocol, localProtocolStatus });
+    if (localProtocolStatus.code !== 200 || localProtocol.length === 0) {
+
+      const { protocol, status } = await installProtocolLocally(web5, protocolDefinition);
+      console.log("Protocol installed locally", protocol, status);
+
+      const { status: configureRemoteStatus } = await protocol.send(did);
+      console.log("Did the protocol install on the remote DWN?", configureRemoteStatus);
+    } else {
+      console.log("Protocol already installed");
+    }
+  };
+
   async function handleCreateCredentialRequest(e) {
     e.preventDefault();
 
+    const configureProtocolStatus = await configureProtocol(web5, myDid);
     // main code to create a credential request
     const credential = {
       schema: EmploymentSchema.url,
@@ -106,12 +138,33 @@ export default function Home() {
   // Prerequisites: Create subject (alice)
     const aliceDid = await DidDhtMethod.create();
     const ionaliceDid = await DidIonMethod.create();
+    const ionemployerDid = await DidIonMethod.create();
+
+    const ionaliceDid2 =  await DidIonMethod.create({
+      services: [{
+          type: 'DecentralizedWebNode',
+          id: '#dwn',
+          serviceEndpoint: {
+              "encryptionKeys": [
+                  "#dwn-enc"
+              ],
+              "nodes": [
+                  "https://dwn.tbddev.org/dwn0",
+                  "https://dwn.tbddev.org/dwn2"
+              ],
+              "signingKeys": [
+                  "#dwn-sig"
+              ]
+          }
+      }]
+  })
 
     const employerDid = await DidDhtMethod.create();
+
       const vc = await VerifiableCredential.create({
         type: 'EmploymentCredential',
-        issuer: employerDid, // senders DID
-        subject: aliceDid, // reciever's DID
+        issuer: ionemployerDid, // senders DID
+        subject: ionaliceDid2, // reciever's DID
         expirationDate: '2023-09-30T12:34:56Z',
         data: {
             "position": "Software Developer",
@@ -123,24 +176,24 @@ export default function Home() {
       console.log(vc);
       toast.success(`Verified Credential request created successfully 🚀`);
       
-      const vc_jwt_employment = await vc.sign({ did: employerDid });
+      const vc_jwt_employment = await vc.sign({ did: ionemployerDid });
       console.log(vc_jwt_employment);
 
-      const { record } = await web5.dwn.records.create({
+      const { record , status: recordstatus } = await web5.dwn.records.create({
         data: vc_jwt_employment,
         message: {
-          schema: 'EmploymentCredential',
+          protocol: 'https://w5employee.vercel.app/protocol2',
+          protocolPath: 'vc',
+          schema: 'https://w5employee.vercel.app/schema',
           dataFormat: 'application/vc+jwt',
+          recipient: ionaliceDid2.did,
         },
       });
-      console.log(record,"record");
-      toast.success('Verified Credential request created successfully 🚀');
-      const { status } = await record.send(aliceDid);
-      console.log(status);
-    const { data } = await axios.post('../../api/create-credential', credential);
 
-    console.log(data);
-    setClaimQR(data.qrUrl);
+      console.log(record,"record", recordstatus);
+      toast.success('Verified Credential request created successfully 🚀');
+      const { status } = await record.send(ionaliceDid2.did);
+      console.log(status);
   }
 
   const setthisup = () => {
@@ -198,7 +251,6 @@ export default function Home() {
 
         <div className="w-full px-8 md:px-32 lg:px-24">
         <form
-          onSubmit={handleGetDidSubmit}
           className="p-5"
           style={{ maxWidth: '500px', margin: '0 auto' }}>
           <h1 className="text-gray-800 font-bold text-2xl mb-6">Your DID</h1>
@@ -255,7 +307,7 @@ export default function Home() {
               <Box p="4">
               <form onSubmit={handleCreateCredentialRequest}>
                 <FormControl>
-                  <FormLabel>Company Name</FormLabel>
+                  <FormLabel className="text-black">Company Name</FormLabel>
                   <Input
                     type="text"
                     value={credentialData.subject.companyName}
@@ -272,7 +324,7 @@ export default function Home() {
                 </FormControl>
 
                 <FormControl>
-                  <FormLabel>Designation</FormLabel>
+                  <FormLabel className="text-black">Designation</FormLabel>
                   <Input
                     type="text"
                     value={credentialData.subject.designation}
@@ -289,7 +341,7 @@ export default function Home() {
                 </FormControl>
 
                 <FormControl>
-                  <FormLabel>Employee ID</FormLabel>
+                  <FormLabel className="text-black">Employee ID</FormLabel>
                   <Input
                     type="text"
                     value={credentialData.subject.id}
