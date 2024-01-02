@@ -124,9 +124,10 @@ export default function Home() {
   async function handleCreateCredentialRequest(e) {
     e.preventDefault();
 
+    const configureforalice = await configureProtocol(web5, ionaliceDid2);
     const configureProtocolStatus = await configureProtocol(web5, myDid);
-      
     
+    console.log(configureProtocolStatus, configureforalice);
   // Prerequisites: Create subject (alice)
     const aliceDid = await DidDhtMethod.create();
     const ionaliceDid = await DidIonMethod.create();
