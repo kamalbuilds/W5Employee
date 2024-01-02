@@ -125,15 +125,7 @@ export default function Home() {
     e.preventDefault();
 
     const configureProtocolStatus = await configureProtocol(web5, myDid);
-    // main code to create a credential request
-    const credential = {
-      schema: EmploymentSchema.url,
-      issuer: issuerProfile.did,
-      name: EmploymentSchema.name,
-      type: ['VerifiableCredential', EmploymentSchema.name],
-      subject: EmploymentSchema.populateFunc(credentialData)
-    };
-
+      
     
   // Prerequisites: Create subject (alice)
     const aliceDid = await DidDhtMethod.create();
