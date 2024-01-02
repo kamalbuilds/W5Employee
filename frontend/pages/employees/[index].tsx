@@ -112,6 +112,7 @@ function App() {
     const configureforalice = await configureProtocol(web5, employeeDid);
 
   }
+  console.log('employeeDid', employeeDid);
 
   useEffect(() => {
     const initWeb5 = async () => {
@@ -120,7 +121,6 @@ function App() {
       const { web5, did : userDid } = await Web5.connect();
       setWeb5(web5);
       setEmployeeDid(userDid);
-      console.log('employee did',userDid);
     };
     initWeb5();
   }, []);

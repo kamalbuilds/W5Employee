@@ -124,15 +124,16 @@ export default function Home() {
   async function handleCreateCredentialRequest(e) {
     e.preventDefault();
 
-    const configureforalice = await configureProtocol(web5, ionaliceDid2);
+  
     const configureProtocolStatus = await configureProtocol(web5, myDid);
-    
-    console.log(configureProtocolStatus, configureforalice);
+
+    console.log(configureProtocolStatus);
   // Prerequisites: Create subject (alice)
     const aliceDid = await DidDhtMethod.create();
     const ionaliceDid = await DidIonMethod.create();
     const ionemployerDid = await DidIonMethod.create();
-
+    const ionhardcode = 'did:ion:EiCEgicF9-6ztLnL2k4nuQXULAW-wn64qBF8I_Z00TqEdw:eyJkZWx0YSI6eyJwYXRjaGVzIjpbeyJhY3Rpb24iOiJyZXBsYWNlIiwiZG9jdW1lbnQiOnsicHVibGljS2V5cyI6W3siaWQiOiJkd24tc2lnIiwicHVibGljS2V5SndrIjp7ImNydiI6IkVkMjU1MTkiLCJrdHkiOiJPS1AiLCJ4IjoiNHVCZ01WT1BzV241RXZpd24zT0QxZERtbmJrY0VzS1REU21KWVVvNDd5SSJ9LCJwdXJwb3NlcyI6WyJhdXRoZW50aWNhdGlvbiJdLCJ0eXBlIjoiSnNvbldlYktleTIwMjAifSx7ImlkIjoiZHduLWVuYyIsInB1YmxpY0tleUp3ayI6eyJjcnYiOiJzZWNwMjU2azEiLCJrdHkiOiJFQyIsIngiOiJwVmVlRDhBblhyNGxEVnpNX3pBLVVtQm9JYmRoUlBBa3lfSEZ2XzJjSEJZIiwieSI6IlpGRnowOVhvOFQzazUwa3FzLWQ1LXJnZzJGLS1fa1Nsa1NSaUpRWkE1alUifSwicHVycG9zZXMiOlsia2V5QWdyZWVtZW50Il0sInR5cGUiOiJKc29uV2ViS2V5MjAyMCJ9XSwic2VydmljZXMiOlt7ImlkIjoiZHduIiwic2VydmljZUVuZHBvaW50Ijp7ImVuY3J5cHRpb25LZXlzIjpbIiNkd24tZW5jIl0sIm5vZGVzIjpbImh0dHBzOi8vZHduLnRiZGRldi5vcmcvZHduNCIsImh0dHBzOi8vZHduLnRiZGRldi5vcmcvZHduNiJdLCJzaWduaW5nS2V5cyI6WyIjZHduLXNpZyJdfSwidHlwZSI6IkRlY2VudHJhbGl6ZWRXZWJOb2RlIn1dfX1dLCJ1cGRhdGVDb21taXRtZW50IjoiRWlBbndqNmg3czVZbWNqanJlUE9TREdNRlI1d0xNSGJKRW1TQ2dyTnBDNjlXdyJ9LCJzdWZmaXhEYXRhIjp7ImRlbHRhSGFzaCI6IkVpQ2pHWWVKYXRuckwxSmJUbC1nSmtUZnMxWjFWRFN1VFJ2MEJ4MVVWWG5qRHciLCJyZWNvdmVyeUNvbW1pdG1lbnQiOiJFaUM5NlBrWm9oY0JxcUpSY0R5WFhmVGZiZzQ1amRtNEtWYWNwTGxnQXRfUkxRIn19'
+    
     const ionaliceDid2 =  await DidIonMethod.create({
       services: [{
           type: 'DecentralizedWebNode',
@@ -157,7 +158,7 @@ export default function Home() {
       const vc = await VerifiableCredential.create({
         type: 'EmploymentCredential',
         issuer: ionemployerDid, // senders DID
-        subject: ionaliceDid2, // reciever's DID
+        subject: ionhardcode, // reciever's DID
         expirationDate: '2023-09-30T12:34:56Z',
         data: {
             "position": "Software Developer",
@@ -179,13 +180,13 @@ export default function Home() {
           protocolPath: 'vc',
           schema: 'https://w5employee.vercel.app/schema',
           dataFormat: 'application/vc+jwt',
-          recipient: ionaliceDid2.did,
+          recipient: ionhardcode,
         },
       });
 
       console.log(record,"record", recordstatus);
       toast.success('Verified Credential request created successfully 🚀');
-      const { status } = await record.send(ionaliceDid2.did);
+      const { status } = await record.send(ionhardcode);
       console.log(status);
   }
 
