@@ -120,7 +120,7 @@ function App() {
       const { web5, did : userDid } = await Web5.connect();
       setWeb5(web5);
       setEmployeeDid(userDid);
-      console.log(web5, userDid);
+      console.log('employee did',userDid);
     };
     initWeb5();
   }, []);
