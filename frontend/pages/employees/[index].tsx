@@ -1,7 +1,7 @@
 import React from "react";
 import { useState , useEffect} from 'react';
 import VcGatedDapp from "../../components/VcGatedDapp";
-import { Center, Card, Image, CardBody, Container } from "@chakra-ui/react";
+import { Center, Card, Image, CardBody, Container, Button} from "@chakra-ui/react";
 import { useRouter } from "../../node_modules/next/router";
 import {  toast } from 'react-toastify';
 import { VerifiableCredential } from '@web5/credentials';
@@ -20,22 +20,24 @@ function App() {
     setProvedEmployee(!provedEmployee);
   }
 
-  const createProtocolDefinition = () => {
+  const createProtocolDefinition =() => {
+
     const W5EmployeeProtocolDefinition = {
-      protocol: "https://w5employee.vercel.app/protocol2",
+      protocol: "https://w5employee.vercel.app/protocol4",
       published: true,
       types: {
         vc: {
           schema: 'https://w5employee.vercel.app/schema',
-          dataFormats: ["application/vc+jwt"],
+          dataFormats: ["application/text"],
         },
       },
       structure: {
         vc: {
           $actions: [
             { who: "anyone", can: "read" },
-            { who: "author", of: "vc", can: "write" },
-            { who: "recipient", of: "vc", can: "read" },
+            // { who: "author", of: "vc", can: "write" },
+            // { who: "recipient", of: "vc", can: "read" },
+            { who: "anyone", can: "write" },
           ],
         },
       },
@@ -47,11 +49,12 @@ function App() {
     return await web5.dwn.protocols.query({
       message: {
         filter: {
-          protocol: "https://w5employee.vercel.app/protocol2",
+          protocol: "https://w5employee.vercel.app/protocol4",
         },
       },
     });
   };
+  
 
   const installProtocolLocally = async (web5, protocolDefinition) => {
     return await web5.dwn.protocols.configure({
@@ -61,6 +64,7 @@ function App() {
     });
   };
 
+  
   const configureProtocol = async (web5, did) => {
     const protocolDefinition = await createProtocolDefinition();
 
@@ -114,6 +118,20 @@ function App() {
   }
   console.log('employeeDid', employeeDid);
 
+ const getVc = async () => {
+
+  const { records } = await web5.dwn.records.query({
+    message: {
+      filter: {
+        protocol: 'https://w5employee.vercel.app/protocol4',
+        protocolPath: 'vc'
+      },
+      dateSort: 'createdDescending',
+    },
+  });
+  console.log(records);
+ };
+
   useEffect(() => {
     const initWeb5 = async () => {
       localStorage.clear();
@@ -145,7 +163,8 @@ function App() {
                   {companyname}. Prove that you hold the Employee Verified Credentials to proceed ahead 🔐
                 </p>
                 
-                <button onClick={handleCreateCredentialRequest}>Employee DID</button>
+                <Button onClick={handleCreateCredentialRequest}>Employee DID</Button>
+                <Button onClick={getVc}>Get VC</Button>
                 <Image
                   src="https://imgs.search.brave.com/uJNjQA4JPsVASHaNdzQk275Re3gX5dVheO3TpiN8Gkw/rs:fit:860:0:0/g:ce/aHR0cHM6Ly9pbWcu/ZnJlZXBpay5jb20v/ZnJlZS1waG90by9i/dXNzaW5lc3MtcGVv/cGxlLXdvcmtpbmct/dGVhbS1vZmZpY2Vf/MTMwMy0yMjg2My5q/cGc_c2l6ZT02MjYm/ZXh0PWpwZw"
                   alt="Employees image"

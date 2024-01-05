@@ -38,20 +38,21 @@ export default function Home() {
 
   const createProtocolDefinition = () => {
     const W5EmployeeProtocolDefinition = {
-      protocol: "https://w5employee.vercel.app/protocol2",
+      protocol: "https://w5employee.vercel.app/protocol4",
       published: true,
       types: {
         vc: {
           schema: 'https://w5employee.vercel.app/schema',
-          dataFormats: ["application/vc+jwt"],
+          dataFormats: ["application/text"],
         },
       },
       structure: {
         vc: {
           $actions: [
+            { who: "anyone",can: "write" },
+            // { who: "author", of: "vc", can: "write" },
+            // { who: "recipient", of: "vc", can: "read" },
             { who: "anyone", can: "read" },
-            { who: "author", of: "vc", can: "write" },
-            { who: "recipient", of: "vc", can: "read" },
           ],
         },
       },
@@ -63,7 +64,7 @@ export default function Home() {
     return await web5.dwn.protocols.query({
       message: {
         filter: {
-          protocol: "https://w5employee.vercel.app/protocol2",
+          protocol: "https://w5employee.vercel.app/protocol4",
         },
       },
     });
@@ -98,15 +99,11 @@ export default function Home() {
   async function handleCreateCredentialRequest(e) {
     e.preventDefault();
 
-  
-    const configureProtocolStatus = await configureProtocol(web5, myDid);
-
-    console.log(configureProtocolStatus);
   // Prerequisites: Create subject (alice)
-    const aliceDid = await DidDhtMethod.create();
-    const ionaliceDid = await DidIonMethod.create();
+    // const aliceDid = await DidDhtMethod.create();
+    // const ionaliceDid = await DidIonMethod.create();
     const ionemployerDid = await DidIonMethod.create();
-    const ionhardcode = 'did:ion:EiCEgicF9-6ztLnL2k4nuQXULAW-wn64qBF8I_Z00TqEdw:eyJkZWx0YSI6eyJwYXRjaGVzIjpbeyJhY3Rpb24iOiJyZXBsYWNlIiwiZG9jdW1lbnQiOnsicHVibGljS2V5cyI6W3siaWQiOiJkd24tc2lnIiwicHVibGljS2V5SndrIjp7ImNydiI6IkVkMjU1MTkiLCJrdHkiOiJPS1AiLCJ4IjoiNHVCZ01WT1BzV241RXZpd24zT0QxZERtbmJrY0VzS1REU21KWVVvNDd5SSJ9LCJwdXJwb3NlcyI6WyJhdXRoZW50aWNhdGlvbiJdLCJ0eXBlIjoiSnNvbldlYktleTIwMjAifSx7ImlkIjoiZHduLWVuYyIsInB1YmxpY0tleUp3ayI6eyJjcnYiOiJzZWNwMjU2azEiLCJrdHkiOiJFQyIsIngiOiJwVmVlRDhBblhyNGxEVnpNX3pBLVVtQm9JYmRoUlBBa3lfSEZ2XzJjSEJZIiwieSI6IlpGRnowOVhvOFQzazUwa3FzLWQ1LXJnZzJGLS1fa1Nsa1NSaUpRWkE1alUifSwicHVycG9zZXMiOlsia2V5QWdyZWVtZW50Il0sInR5cGUiOiJKc29uV2ViS2V5MjAyMCJ9XSwic2VydmljZXMiOlt7ImlkIjoiZHduIiwic2VydmljZUVuZHBvaW50Ijp7ImVuY3J5cHRpb25LZXlzIjpbIiNkd24tZW5jIl0sIm5vZGVzIjpbImh0dHBzOi8vZHduLnRiZGRldi5vcmcvZHduNCIsImh0dHBzOi8vZHduLnRiZGRldi5vcmcvZHduNiJdLCJzaWduaW5nS2V5cyI6WyIjZHduLXNpZyJdfSwidHlwZSI6IkRlY2VudHJhbGl6ZWRXZWJOb2RlIn1dfX1dLCJ1cGRhdGVDb21taXRtZW50IjoiRWlBbndqNmg3czVZbWNqanJlUE9TREdNRlI1d0xNSGJKRW1TQ2dyTnBDNjlXdyJ9LCJzdWZmaXhEYXRhIjp7ImRlbHRhSGFzaCI6IkVpQ2pHWWVKYXRuckwxSmJUbC1nSmtUZnMxWjFWRFN1VFJ2MEJ4MVVWWG5qRHciLCJyZWNvdmVyeUNvbW1pdG1lbnQiOiJFaUM5NlBrWm9oY0JxcUpSY0R5WFhmVGZiZzQ1amRtNEtWYWNwTGxnQXRfUkxRIn19'
+    const ionhardcode = 'did:ion:EiDWZQbyeJ9CqEJ5JEBVPzxeTldfHnPlgwk0kSAt-BeNvA:eyJkZWx0YSI6eyJwYXRjaGVzIjpbeyJhY3Rpb24iOiJyZXBsYWNlIiwiZG9jdW1lbnQiOnsicHVibGljS2V5cyI6W3siaWQiOiJkd24tc2lnIiwicHVibGljS2V5SndrIjp7ImNydiI6IkVkMjU1MTkiLCJrdHkiOiJPS1AiLCJ4IjoiZnFqT1lGVFltQ3JlYlk4OVNKenpDdVpkdnFaeUozVGs4azZ2RlhSdUY4SSJ9LCJwdXJwb3NlcyI6WyJhdXRoZW50aWNhdGlvbiJdLCJ0eXBlIjoiSnNvbldlYktleTIwMjAifSx7ImlkIjoiZHduLWVuYyIsInB1YmxpY0tleUp3ayI6eyJjcnYiOiJzZWNwMjU2azEiLCJrdHkiOiJFQyIsIngiOiJBeENtbzl6cVhwaVZOblFmSHhER3UxOG5fenhLYjhneDdCUXdrVVdKeDVrIiwieSI6Ild4Ny13UmVXdjlyd2stMjJ2SDNPQkMwdXV0YlZSLTk1dlFJOTJicEtBajAifSwicHVycG9zZXMiOlsia2V5QWdyZWVtZW50Il0sInR5cGUiOiJKc29uV2ViS2V5MjAyMCJ9XSwic2VydmljZXMiOlt7ImlkIjoiZHduIiwic2VydmljZUVuZHBvaW50Ijp7ImVuY3J5cHRpb25LZXlzIjpbIiNkd24tZW5jIl0sIm5vZGVzIjpbImh0dHBzOi8vZHduLnRiZGRldi5vcmcvZHduNSIsImh0dHBzOi8vZHduLnRiZGRldi5vcmcvZHduMSJdLCJzaWduaW5nS2V5cyI6WyIjZHduLXNpZyJdfSwidHlwZSI6IkRlY2VudHJhbGl6ZWRXZWJOb2RlIn1dfX1dLCJ1cGRhdGVDb21taXRtZW50IjoiRWlDWDNtSlF6SWdISHRGNkhsM3cxZXVJQ2lLX3lBNnJQWFVTOFg1Wkpsa2tHdyJ9LCJzdWZmaXhEYXRhIjp7ImRlbHRhSGFzaCI6IkVpRHE3elNHel9fRTZoZWxodXU5Zk1PRTdDUGtfd283Qm1wYlRWY2FaX1F5emciLCJyZWNvdmVyeUNvbW1pdG1lbnQiOiJFaUJRZVpVaGpsSnF4eDBPTmU3RzZ4dUxnMWRLOXp6T0ljbXhaendrRmdyMFNnIn19'
     
     const ionaliceDid2 =  await DidIonMethod.create({
       services: [{
@@ -127,8 +124,12 @@ export default function Home() {
       }]
   })
 
-    const employerDid = await DidDhtMethod.create();
-  console.log('ionvsmydid',ionemployerDid, myDid);
+      
+  const configureProtocolStatus = await configureProtocol(web5, ionemployerDid);
+
+  console.log(configureProtocolStatus);
+  console.log('ionvsmydid',ionemployerDid);
+  console.log("myDID", myDid);
       const vc = await VerifiableCredential.create({
         type: 'EmploymentCredential',
         issuer: ionemployerDid, // senders DID
@@ -150,10 +151,10 @@ export default function Home() {
       const { record , status: recordstatus } = await web5.dwn.records.create({
         data: vc_jwt_employment,
         message: {
-          protocol: 'https://w5employee.vercel.app/protocol2',
+          protocol: 'https://w5employee.vercel.app/protocol4',
           protocolPath: 'vc',
           schema: 'https://w5employee.vercel.app/schema',
-          dataFormat: 'application/vc+jwt',
+          dataFormat: 'application/text',
           recipient: ionhardcode,
         },
       });
