@@ -58,7 +58,7 @@ export default function SmallWithSocial() {
         align={{ base: "center", md: "center" }}
         className="my-2"
       >
-        <Text className="text-yellow-100">Made with ❤️ @TBD Web5.0</Text>
+        <Text className="text-orange-400">Made with ❤️ @TBD Web5.0</Text>
         <Stack direction={"row"} spacing={6}>
           <SocialButton label={"Twitter"} href={"www.twitter.com/0xkamal7"}>
             <FaTwitter />
