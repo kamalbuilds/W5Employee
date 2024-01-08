@@ -1,4 +1,4 @@
-import { Link } from "@remix-run/react";
+import { Link } from "@chakra-ui/react";
 import { format } from "date-fns";
 import { DUMMY_DATA, DUMMY_START_DATE } from "../../../constants/general";
 import PhotoPreview from "../Sections/Photo/PhotoPreview";
