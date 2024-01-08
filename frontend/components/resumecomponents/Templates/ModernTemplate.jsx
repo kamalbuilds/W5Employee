@@ -44,7 +44,7 @@ function ModernTemplate({
       <div className="p-10 flex gap-10">
         <section className="w-3/5">
           <p className="text-xl font-bold text-custom-primary mb-4">
-            Work Experience
+            VC Work Experiences
           </p>
           {projects?.map((project, index) => (
             <div key={index} className="group relative">
