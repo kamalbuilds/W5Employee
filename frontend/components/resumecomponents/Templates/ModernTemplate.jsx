@@ -2,6 +2,7 @@ import { Link } from "@chakra-ui/react";
 import { format } from "date-fns";
 import { DUMMY_DATA, DUMMY_START_DATE } from "../../../constants/general";
 import PhotoPreview from "../Sections/Photo/PhotoPreview";
+import VCProjectcard from "../../VCProjectcard";
 
 function ModernTemplate({
   userDetails,
@@ -10,6 +11,7 @@ function ModernTemplate({
   socials,
   educations,
   selectedImage,
+  arrayofVc,
 }) {
   return (
     <>
@@ -46,33 +48,13 @@ function ModernTemplate({
           <p className="text-xl font-bold text-custom-primary mb-4">
             VC Work Experiences
           </p>
-          {projects?.map((project, index) => (
-            <div key={index} className="group relative">
-              <header className="flex flex-col mb-2">
-                <p className="font-semibold">
-                  {project.projectTitle || DUMMY_DATA.projectTitle}
-                </p>{" "}
-                <div
-                  className={`opacity-40 ${
-                    !project.stDate ? "hidden" : "block"
-                  }`}
-                >
-                  <span>
-                    {project.stDate && format(project.stDate, "MMM do, yyyy")}
-                  </span>{" "}
-                  -{" "}
-                  <span>
-                    {project.enDate
-                      ? format(project.enDate, "MMM do, yyyy")
-                      : "Present"}
-                  </span>
-                </div>
-              </header>
-              <pre className="w-full overflow-hidden resize-none mb-4 max-w-sm font-[inherit] whitespace-break-spaces">
-                {project.projectDescription || DUMMY_DATA.projectDescription}
-              </pre>
+          <div>
+              {arrayofVc && arrayofVc?.map((vc, index) => (
+                <VCProjectcard
+                  vcData={vc}
+                />
+              ))}
             </div>
-          ))}
         </section>
         <section className="flex gap-10 w-2/5">
           <div className="flex-1">

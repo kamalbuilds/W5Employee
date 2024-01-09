@@ -3,6 +3,7 @@ import { DUMMY_DATA, DUMMY_START_DATE } from "../../../constants/general";
 import { Link } from "@chakra-ui/react";
 import PhotoPreview from "../Sections/Photo/PhotoPreview";
 import { Separator } from "../ui/separator";
+import VCProjectcard from "../../VCProjectcard";
 
 function CalmTemplate({
   userDetails,
@@ -11,7 +12,8 @@ function CalmTemplate({
   socials,
   educations,
   selectedImage,
-  border
+  border,
+  arrayofVc,
 }) {
   return (
     <div className="p-5">
@@ -82,33 +84,13 @@ function CalmTemplate({
         <p className="text-lg font-bold text-custom-primary w-full">
           Work Experience
         </p>
-        {projects?.map((project, index) => (
-          <div key={index} className="flex">
-            <div className="opacity-40 w-2/5">
-              <div
-                className={`opacity-40 ${!project.stDate ? "hidden" : "block"}`}
-              >
-                <span>
-                  {project.stDate && format(project.stDate, "MMM do, yyyy")}
-                </span>{" "}
-                -{" "}
-                <span>
-                  {project.enDate
-                    ? format(project.enDate, "MMM do, yyyy")
-                    : "Present"}
-                </span>
+        <div>
+        {arrayofVc && arrayofVc?.map((vc, index) => (
+                <VCProjectcard
+                  vcData={vc}
+                />
+              ))}
               </div>
-            </div>
-            <div className="w-full">
-              <p className="font-semibold">
-                {project.projectTitle || DUMMY_DATA.projectTitle}
-              </p>{" "}
-              <pre className="w-full overflow-hidden resize-none mb-4 max-w-sm font-[inherit] whitespace-break-spaces">
-                {project.projectDescription || DUMMY_DATA.projectDescription}
-              </pre>
-            </div>
-          </div>
-        ))}
       </section>
       <Separator className="h-[1px]" />
       <section className="flex gap-3 my-6">

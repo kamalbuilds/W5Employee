@@ -2,6 +2,7 @@ import { Link } from "@chakra-ui/react";
 import { format } from "date-fns";
 import { DUMMY_DATA, DUMMY_START_DATE } from "../../../constants/general";
 import PhotoPreview from "../Sections/Photo/PhotoPreview";
+import VCProjectcard from "../../VCProjectcard";
 
 function InitialTemplate({
   userDetails,
@@ -11,6 +12,7 @@ function InitialTemplate({
   educations,
   selectedImage,
   border,
+  arrayofVc,
 }) {
   return (
     <div className="p-10 flex gap-10">
@@ -38,31 +40,10 @@ function InitialTemplate({
           </p>
           <div className="flex flex-col gap-5">
             <div>
-              {projects?.map((project, index) => (
-                <div key={index} className="group relative">
-                  <header className="flex flex-col">
-                    <div className="opacity-40">
-                      <span>
-                        {project.stDate
-                          ? format(project.stDate, "MMM do, yyyy")
-                          : format(DUMMY_START_DATE, "MMM do, yyyy")}
-                      </span>{" "}
-                      -{" "}
-                      <span>
-                        {project.enDate
-                          ? format(project.enDate, "MMM do, yyyy")
-                          : "Present"}
-                      </span>
-                    </div>
-                    <p className="font-semibold">
-                      {project.projectTitle || DUMMY_DATA.projectTitle}
-                    </p>
-                  </header>
-                  <pre className="w-full overflow-hidden resize-none mb-4 max-w-sm font-[inherit] whitespace-break-spaces">
-                    {project.projectDescription ||
-                      DUMMY_DATA.projectDescription}
-                  </pre>
-                </div>
+              {arrayofVc && arrayofVc?.map((vc, index) => (
+                <VCProjectcard
+                  vcData={vc}
+                />
               ))}
             </div>
           </div>

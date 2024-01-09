@@ -7,18 +7,16 @@ import {  toast } from 'react-toastify';
 import { VerifiableCredential } from '@web5/credentials';
 import { Web5 } from "@web5/api";
 import { DidKeyMethod, DidDhtMethod, DidIonMethod } from '@web5/dids';
+import VCProjectcard from "../../components/VCProjectcard";
+
 function App() {
 
   const [provedEmployee, setProvedEmployee] = useState(false);
   const [web5, setWeb5] = useState(null);
   const [employeeDid, setEmployeeDid] = useState(null); // [1]
+  const [vcData, setVcData] = useState(null); // [1]
   const router = useRouter();
   const companyname = router.query.index;
-
-  const notify = () => {
-    toast.success("You are a verified employee of " + companyname);
-    setProvedEmployee(!provedEmployee);
-  }
 
   const createProtocolDefinition =() => {
 
@@ -46,7 +44,7 @@ function App() {
   };
   
   const queryForProtocol = async (web5) => {
-    return await web5.dwn.protocols.query({
+    return await web5?.dwn.protocols.query({
       message: {
         filter: {
           protocol: "https://w5employee.vercel.app/protocol4",
@@ -130,6 +128,10 @@ function App() {
     },
   });
   console.log(records);
+
+    const signedVcJwt = await records[0].data.text();
+    const vc = VerifiableCredential.parseJwt({ vcJwt: signedVcJwt });
+    setVcData(vc);
  };
 
   useEffect(() => {
@@ -137,6 +139,7 @@ function App() {
       localStorage.clear();
       console.log("i am called");
       const { web5, did : userDid } = await Web5.connect();
+      console.log(web5);
       setWeb5(web5);
       setEmployeeDid(userDid);
     };
@@ -174,6 +177,10 @@ function App() {
                   alt="Employees image"
                   borderRadius="lg"
                 />
+
+                {vcData && (
+                  <VCProjectcard vcData={vcData} />
+                )}
               </CardBody>
               <a
                 href="https://twitter.com/0xkamal7"

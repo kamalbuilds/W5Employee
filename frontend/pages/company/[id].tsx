@@ -21,11 +21,9 @@ export default function Home() {
   const router = useRouter();
   const { id } = router.query;
 
-  const [issuerName, setIssuerName] = useState(id);
   const [issuerProfile, setIssuerProfile] = useState();
   const [web5, setWeb5] = useState(null);
   const [myDid, setMyDid] = useState(null);
-  const [recipientDid, setRecipientDid] = useState("");
   const [credentialData, setCredentialData] = useState({
     subject: {
       companyName: id,
@@ -179,7 +177,7 @@ console.log(credentialData,"creden")
 
   const getVc = async () => {
 
-    const { records } = await web5?.dwn?.records?.query({
+    const { records } = await web5.dwn.records.query({
       message: {
         filter: {
           protocol: 'https://w5employee.vercel.app/protocol4',
@@ -195,8 +193,6 @@ console.log(credentialData,"creden")
     const vc = VerifiableCredential.parseJwt({ vcJwt: signedVcJwt });
     console.log(vc);
    };
-
-   getVc();
 
   useEffect(() => {
     const initWeb5 = async () => {
@@ -390,7 +386,7 @@ console.log(credentialData,"creden")
                 </FormControl>
 
                 <FormControl>
-                  <FormLabel className="text-black">Employee&aptos;s DID</FormLabel>
+                  <FormLabel className="text-black">Employee&apos;s DID</FormLabel>
                   <Input
                     type="text"
                     value={credentialData.subject.did}
@@ -431,6 +427,7 @@ console.log(credentialData,"creden")
                   Generate VC & Send to Employee
                 </Button>
               </form>
+              <Button onClick={() => getVc()} colorScheme="teal" mt="4">get Generated VCs</Button>
               </Box>
             </div>
           </div>

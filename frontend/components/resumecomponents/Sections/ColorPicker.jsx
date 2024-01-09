@@ -15,7 +15,7 @@ function ColorPicker({ selectedColor, setSelectedColor }) {
               onClick={() => {
                 setSelectedColor(color.hexCode);
               }}
-              className={`rounded-full w-8 h-8 ${color.twColor} hover:${color.twColor} hover:bg-opacity-70`}
+              className={`rounded-full w-8 h-8 ${color.twColor} hover:${color.twColor}`}
               size="icon"
             >
               {selectedColor === color.hexCode && <CheckIcon />}
