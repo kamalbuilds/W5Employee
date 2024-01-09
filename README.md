@@ -1,4 +1,6 @@
-# W5Employee 👨🏻‍💻 -> Verifiable Work Based Credentials for the building the VC Resume , Completely verifiable credentials empowered by DIDs, VCs and DWNs.
+# W5Employee 👨🏻‍💻 
+
+Verifiable Work Based Credentials for the building the VC Resume , Completely verifiable credentials empowered by DIDs, VCs and DWNs.
 
 ## Trust, Innovation, Verifiability
 
@@ -9,6 +11,10 @@ In a digital landscape fraught with work fraud and credential misrepresentation,
 <a href="https://developer.tbd.website/docs/web5/learn/decentralized-identifiers">Decentralized Identifiers (DID)</a> - The app generates a DID to identify you when you first launch it. This is stored in the browser and acts as your identity.
 
 <a href="https://developer.tbd.website/docs/web5/learn/decentralized-web-nodes">Decentralized Web Nodes (DWN)</a> - A DWN is created in the browser to store your data encrypted securely. We use it to store uploaded files.
+
+Now everyone can generate their VC powered resumes easily to secure and verifiable credentials on the blockchain.
+
+<img src="https://github.com/kamalbuilds/W5Employee/assets/95926324/7d2a2841-e040-4411-a3b5-b6b80ef242f7" width={80} alt="bob the employee"/>
 
 ### Problem Statement
 
