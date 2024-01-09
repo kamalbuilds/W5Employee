@@ -63,15 +63,25 @@ console.log(credentialData,"creden")
   };
   
   const queryForProtocol = async (web5) => {
-    return await web5.dwn.protocols.query({
-      message: {
-        filter: {
-          protocol: "https://w5employee.vercel.app/protocol4",
+    if (!web5) return; // Optionally handle the case when web5 is falsy
+  
+    try {
+      const result = await web5?.dwn.protocols.query({
+        message: {
+          filter: {
+            protocol: "https://w5employee.vercel.app/protocol4",
+          },
         },
-      },
-    });
+      });
+  
+      return result;
+    } catch (error) {
+      console.error("Error querying protocol:", error);
+      // Handle the error as needed
+      throw error; // Optionally rethrow the error if you want to propagate it
+    }
   };
-
+  
   const installProtocolLocally = async (web5, protocolDefinition) => {
     return await web5.dwn.protocols.configure({
       message: {
