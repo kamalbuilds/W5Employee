@@ -1,4 +1,4 @@
-# W5Employee 👨🏻‍💻 -> Verifiable Work Credentials for the Fin-Tech Industry
+# W5Employee 👨🏻‍💻 -> Verifiable Work Based Credentials for the building the VC Resume , Completely verifiable credentials empowered by DIDs, VCs and DWNs.
 
 ## Trust, Innovation, Verifiability
 
