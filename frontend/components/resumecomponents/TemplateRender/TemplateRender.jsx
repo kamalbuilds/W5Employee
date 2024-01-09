@@ -57,13 +57,23 @@ function TemplateRenderer({
   };
   
   const queryForProtocol = async (web5) => {
-    return await web5.dwn.protocols.query({
-      message: {
-        filter: {
-          protocol: "https://w5employee.vercel.app/protocol4",
+    if (!web5) return; // Optionally handle the case when web5 is falsy
+  
+    try {
+      const result = await web5?.dwn.protocols.query({
+        message: {
+          filter: {
+            protocol: "https://w5employee.vercel.app/protocol4",
+          },
         },
-      },
-    });
+      });
+  
+      return result;
+    } catch (error) {
+      console.error("Error querying protocol:", error);
+      // Handle the error as needed
+      throw error; // Optionally rethrow the error if you want to propagate it
+    }
   };
   
 
@@ -114,11 +124,8 @@ function TemplateRenderer({
       },
     },
   });
-  console.log(records);
 
   const vcs = records.map(async (record) => {
-    console.log(record, "record");
-
     const signedVcJwt = await record.data.text();
     const vc = VerifiableCredential.parseJwt({ vcJwt: signedVcJwt });
     return vc;

@@ -5,11 +5,12 @@ import { useState } from 'react';
 
 const VCProjectCard = ({ vcData }) => {
   const [vcDataModel, setVcDataModel] = useState(null);
-  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(true);
 
   const toggleCollapse = () => {
     setIsCollapsed(!isCollapsed);
-  };  
+  };
+
   async function getVcDataModel() {
     const {
       vcDataModel,
@@ -21,6 +22,9 @@ const VCProjectCard = ({ vcData }) => {
 
   const formattedIssuanceDate = vcDataModel ? new Date(vcDataModel.issuanceDate).toLocaleString() : '';
   const formattedExpirationDate = vcDataModel ? new Date(vcDataModel.expirationDate).toLocaleString(): '';
+  const formattedStartDate = vcDataModel ? new Date(vcDataModel.credentialSubject.startDate).toLocaleString(): '';
+  const formattedEndDate = vcDataModel ? new Date(vcDataModel.credentialSubject.endDate).toLocaleString(): '';
+  
   return (
     <Box
       maxW="sm"
@@ -42,25 +46,23 @@ const VCProjectCard = ({ vcData }) => {
         <Text>ID: {vcDataModel?.id}</Text>
         <Text>Issued by: {vcDataModel?.issuer.did}</Text>
         <Text>Issuance Date: {formattedIssuanceDate}</Text>
-
-        <VStack spacing={2} align="start">
-          <Badge colorScheme="blue">Credential Subject</Badge>
-          {isCollapsed && (
-            <>
-              <Text>Employee Name: {vcDataModel?.credentialSubject.employeeName}</Text>
-              <Text>Position: {vcDataModel?.credentialSubject.position}</Text>
-              <Text>Company Name: {vcDataModel?.credentialSubject.companyName}</Text>
-              <Text>Start Date: {vcDataModel?.credentialSubject.startDate}</Text>
-              <Text>End Date: {vcDataModel?.credentialSubject.endDate}</Text>
-              <Text>Remarks: {vcDataModel?.credentialSubject.remarksforemployee}</Text>
-            </>
-          )}
-        </VStack>
-
         <Text>Expiration Date: {formattedExpirationDate}</Text>
         <Button onClick={toggleCollapse} size="sm">
           {isCollapsed ? 'Show Details' : 'Hide Details'}
         </Button>
+        {isCollapsed && (
+            <>
+            <VStack spacing={2} align="start">
+              <Badge colorScheme="blue">Credential Subject</Badge>
+                  <Text>Employee Name: {vcDataModel?.credentialSubject.employeeName}</Text>
+                  <Text>Position: {vcDataModel?.credentialSubject.position}</Text>
+                  <Text>Company Name: {vcDataModel?.credentialSubject.companyName}</Text>
+                  <Text>Start Date: {formattedStartDate}</Text>
+                  <Text>End Date: {formattedEndDate}</Text>
+                  <Text>Remarks: {vcDataModel?.credentialSubject.remarksforemployee}</Text>
+            </VStack>
+            </>
+        )}
       </VStack>
     </Box>
   );
