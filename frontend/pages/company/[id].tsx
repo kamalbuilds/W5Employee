@@ -16,10 +16,11 @@ import {
 import { VerifiableCredential } from '@web5/credentials';
 import { Web5 } from "@web5/api";
 import { DidKeyMethod, DidDhtMethod, DidIonMethod } from '@web5/dids';
-
+// import DatePicker from "../../components/resumecomponents/DatePicker/DatePicker";
 export default function Home() {
   const router = useRouter();
   const { id } = router.query;
+
   const [issuerName, setIssuerName] = useState(id);
   const [issuerProfile, setIssuerProfile] = useState();
   const [web5, setWeb5] = useState(null);
@@ -27,15 +28,18 @@ export default function Home() {
   const [recipientDid, setRecipientDid] = useState("");
   const [credentialData, setCredentialData] = useState({
     subject: {
-      companyName: '',
+      companyName: id,
+      employeeName: '',
       designation: '',
       issuanceDate: getUnixTime(new Date()),
-      id: '',
+      expirationDate: getUnixTime(new Date()),
+      did: '',
+      remarks: '',
     },
   });
 
   const [claimQR, setClaimQR] = useState('');
-
+console.log(credentialData,"creden")
   const createProtocolDefinition = () => {
     const W5EmployeeProtocolDefinition = {
       protocol: "https://w5employee.vercel.app/protocol4",
@@ -49,7 +53,7 @@ export default function Home() {
       structure: {
         vc: {
           $actions: [
-            { who: "anyone",can: "write" },
+            { who: "author",can: "write" },
             // { who: "author", of: "vc", can: "write" },
             // { who: "recipient", of: "vc", can: "read" },
             { who: "anyone", can: "read" },
@@ -103,6 +107,7 @@ export default function Home() {
     // const aliceDid = await DidDhtMethod.create();
     // const ionaliceDid = await DidIonMethod.create();
     const ionemployerDid = await DidIonMethod.create();
+    console.log(ionemployerDid,"ionemployerDid")
     const ionhardcode = 'did:ion:EiDWZQbyeJ9CqEJ5JEBVPzxeTldfHnPlgwk0kSAt-BeNvA:eyJkZWx0YSI6eyJwYXRjaGVzIjpbeyJhY3Rpb24iOiJyZXBsYWNlIiwiZG9jdW1lbnQiOnsicHVibGljS2V5cyI6W3siaWQiOiJkd24tc2lnIiwicHVibGljS2V5SndrIjp7ImNydiI6IkVkMjU1MTkiLCJrdHkiOiJPS1AiLCJ4IjoiZnFqT1lGVFltQ3JlYlk4OVNKenpDdVpkdnFaeUozVGs4azZ2RlhSdUY4SSJ9LCJwdXJwb3NlcyI6WyJhdXRoZW50aWNhdGlvbiJdLCJ0eXBlIjoiSnNvbldlYktleTIwMjAifSx7ImlkIjoiZHduLWVuYyIsInB1YmxpY0tleUp3ayI6eyJjcnYiOiJzZWNwMjU2azEiLCJrdHkiOiJFQyIsIngiOiJBeENtbzl6cVhwaVZOblFmSHhER3UxOG5fenhLYjhneDdCUXdrVVdKeDVrIiwieSI6Ild4Ny13UmVXdjlyd2stMjJ2SDNPQkMwdXV0YlZSLTk1dlFJOTJicEtBajAifSwicHVycG9zZXMiOlsia2V5QWdyZWVtZW50Il0sInR5cGUiOiJKc29uV2ViS2V5MjAyMCJ9XSwic2VydmljZXMiOlt7ImlkIjoiZHduIiwic2VydmljZUVuZHBvaW50Ijp7ImVuY3J5cHRpb25LZXlzIjpbIiNkd24tZW5jIl0sIm5vZGVzIjpbImh0dHBzOi8vZHduLnRiZGRldi5vcmcvZHduNSIsImh0dHBzOi8vZHduLnRiZGRldi5vcmcvZHduMSJdLCJzaWduaW5nS2V5cyI6WyIjZHduLXNpZyJdfSwidHlwZSI6IkRlY2VudHJhbGl6ZWRXZWJOb2RlIn1dfX1dLCJ1cGRhdGVDb21taXRtZW50IjoiRWlDWDNtSlF6SWdISHRGNkhsM3cxZXVJQ2lLX3lBNnJQWFVTOFg1Wkpsa2tHdyJ9LCJzdWZmaXhEYXRhIjp7ImRlbHRhSGFzaCI6IkVpRHE3elNHel9fRTZoZWxodXU5Zk1PRTdDUGtfd283Qm1wYlRWY2FaX1F5emciLCJyZWNvdmVyeUNvbW1pdG1lbnQiOiJFaUJRZVpVaGpsSnF4eDBPTmU3RzZ4dUxnMWRLOXp6T0ljbXhaendrRmdyMFNnIn19'
     
     const ionaliceDid2 =  await DidIonMethod.create({
@@ -133,17 +138,20 @@ export default function Home() {
       const vc = await VerifiableCredential.create({
         type: 'EmploymentCredential',
         issuer: ionemployerDid, // senders DID
-        subject: ionhardcode, // reciever's DID
+        subject: credentialData.subject.did, // reciever's DID
         expirationDate: '2023-09-30T12:34:56Z',
         data: {
-            "position": "Software Developer",
-            "startDate": "2023-04-01T12:34:56Z",
-            "employmentStatus": "Contractor"
+            "position": credentialData.subject.designation,
+            "startDate": credentialData.subject.issuanceDate,
+            "endDate": credentialData.subject.expirationDate,
+            "employeeName": credentialData.subject.employeeName,
+            "companyName": credentialData.subject.companyName,
+            "remarksforemployee": credentialData.subject.remarks,
         }
       });
     
       console.log(vc);
-      toast.success(`Verified Credential request created successfully 🚀`);
+      toast.success(`Verified Credential created successfully 🚀`);
       
       const vc_jwt_employment = await vc.sign({ did: ionemployerDid });
       console.log(vc_jwt_employment);
@@ -155,13 +163,13 @@ export default function Home() {
           protocolPath: 'vc',
           schema: 'https://w5employee.vercel.app/schema',
           dataFormat: 'application/text',
-          recipient: ionhardcode,
+          recipient: credentialData.subject.did,
         },
       });
 
       console.log(record,"record", recordstatus);
-      toast.success('Verified Credential request created successfully 🚀');
-      const { status } = await record.send(ionhardcode);
+      const { status } = await record.send(credentialData.subject.did);
+      toast.success('VC sent to employee successfully 🪔');
       console.log(status);
   }
 
@@ -169,6 +177,26 @@ export default function Home() {
     setIssuerProfile(myDid);
   }
 
+  const getVc = async () => {
+
+    const { records } = await web5?.dwn?.records?.query({
+      message: {
+        filter: {
+          protocol: 'https://w5employee.vercel.app/protocol4',
+          protocolPath: 'vc'
+        },
+      },
+    });
+    console.log(records);
+
+    const signedVcJwt = await records[0].data.text();
+
+    console.log(signedVcJwt);
+    const vc = VerifiableCredential.parseJwt({ vcJwt: signedVcJwt });
+    console.log(vc);
+   };
+
+   getVc();
 
   useEffect(() => {
     const initWeb5 = async () => {
@@ -177,7 +205,6 @@ export default function Home() {
       const { web5, did : userDid } = await Web5.connect();
       setWeb5(web5);
       setMyDid(userDid);
-      console.log(web5, userDid);
     };
     initWeb5();
   }, []);
@@ -221,10 +248,10 @@ export default function Home() {
         <div className="w-full px-8 md:px-32 lg:px-24">
         <form
           className="p-5"
-          style={{ maxWidth: '500px', margin: '0 auto' }}>
+          style={{ margin: '0 auto' }}>
           <h1 className="text-gray-800 font-bold text-2xl mb-6">Your DID</h1>
           <div className="flex items-center border-2 mb-8 py-2 px-3 rounded-2xl">
-            userDid: {myDid ? myDid : "Loading..."}
+            userDid: {myDid ?   myDid.slice(0, 25) +"..." + myDid.slice(-25) : "Loading..."}
           </div>
 
           <button onClick={() => setthisup()} className="block w-full bg-blue-600 mt-5 py-2 rounded-full hover:bg-blue-700 hover:-translate-y-1 transition-all duration-250 text-white font-semibold mb-2">
@@ -262,7 +289,7 @@ export default function Home() {
               </h1>
 
               <p className="text-white mt-1">
-                We&apos;ll issue a ZK Verifable Empoloyee Credential to our Employees.
+                We&apos;ll issue a ZK Verifable Empoloyee Credential to your Employees.
               </p>
               <br />
               <br />
@@ -275,8 +302,9 @@ export default function Home() {
             <div className="w-full px-8 md:px-32 lg:px-24">
               <Box p="4">
               <form onSubmit={handleCreateCredentialRequest}>
-                <FormControl>
-                  <FormLabel className="text-black">Company Name</FormLabel>
+
+              <FormControl>
+                  <FormLabel className="text-black">Company&apos;s Name</FormLabel>
                   <Input
                     type="text"
                     value={credentialData.subject.companyName}
@@ -293,7 +321,24 @@ export default function Home() {
                 </FormControl>
 
                 <FormControl>
-                  <FormLabel className="text-black">Designation</FormLabel>
+                  <FormLabel className="text-black">Employee&apos;s Name</FormLabel>
+                  <Input
+                    type="text"
+                    value={credentialData.subject.employeeName}
+                    onChange={(e) =>
+                      setCredentialData({
+                        ...credentialData,
+                        subject: {
+                          ...credentialData.subject,
+                          employeeName: e.target.value,
+                        },
+                      })
+                    }
+                  />
+                </FormControl>
+
+                <FormControl>
+                  <FormLabel className="text-black">Employee&apos;s Designation</FormLabel>
                   <Input
                     type="text"
                     value={credentialData.subject.designation}
@@ -310,16 +355,68 @@ export default function Home() {
                 </FormControl>
 
                 <FormControl>
-                  <FormLabel className="text-black">Employee ID</FormLabel>
+                  <FormLabel className="text-black">Employement Start Date</FormLabel>
+                  <div className="flex gap-5 items-center">
+                    <DatePicker
+                      selected={credentialData.subject.issuanceDate}
+                      onChange={(date) => {
+                        console.log(date,"updated date");
+                        setCredentialData({
+                          ...credentialData,
+                          subject: {
+                            ...credentialData.subject,
+                            issuanceDate: date,
+                          },
+                        })
+                      }}
+                    /> 
+                  </div>
+                </FormControl>
+
+                <FormControl>
+                  <FormLabel className="text-black">Employement End Date</FormLabel>
+                    <DatePicker
+                      selected={credentialData.subject.expirationDate}
+                      onChange={(date) =>
+                        setCredentialData({
+                          ...credentialData,
+                          subject: {
+                            ...credentialData.subject,
+                            expirationDate: date
+                          },
+                        })
+                      }
+                    />
+                </FormControl>
+
+                <FormControl>
+                  <FormLabel className="text-black">Employee&aptos;s DID</FormLabel>
                   <Input
                     type="text"
-                    value={credentialData.subject.id}
+                    value={credentialData.subject.did}
                     onChange={(e) =>
                       setCredentialData({
                         ...credentialData,
                         subject: {
                           ...credentialData.subject,
-                          id: e.target.value,
+                          did: e.target.value,
+                        },
+                      })
+                    }
+                  />
+                </FormControl>
+
+                <FormControl>
+                  <FormLabel className="text-black">Remarks for Employee</FormLabel>
+                  <Input
+                    type="text"
+                    value={credentialData.subject.remarks}
+                    onChange={(e) =>
+                      setCredentialData({
+                        ...credentialData,
+                        subject: {
+                          ...credentialData.subject,
+                          remarks: e.target.value,
                         },
                       })
                     }
@@ -331,7 +428,7 @@ export default function Home() {
                   colorScheme="teal"
                   mt="4"
                 >
-                  Create Credential Request
+                  Generate VC & Send to Employee
                 </Button>
               </form>
               </Box>

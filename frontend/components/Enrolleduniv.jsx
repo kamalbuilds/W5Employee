@@ -13,7 +13,7 @@ import {
 } from '@chakra-ui/react';
 import Link from 'next/link';
 
-export default function Enrolleduniv({ name, location , employees, imageUrl, avatarUrl , url }) {
+export default function Enrolleduniv({ name, location , employees, imageUrl, avatarUrl , url , companydid }) {
     return (
     <Center py={6}>
       <Box
@@ -54,6 +54,15 @@ export default function Enrolleduniv({ name, location , employees, imageUrl, ava
               <Text fontWeight={600}>{employees}</Text>
               <Text fontSize={'sm'} color={'gray.500'}>
                 employees
+              </Text>
+            </Stack>
+          </Stack>
+
+          <Stack direction={'row'} justify={'center'} spacing={6}>
+            <Stack spacing={0} align={'center'}>
+              <Text fontWeight={600}>{companydid.slice(0,20)}... {companydid.slice(-6)}</Text>
+              <Text fontSize={'sm'} color={'gray.500'}>
+                Company DID
               </Text>
             </Stack>
           </Stack>

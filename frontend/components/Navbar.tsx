@@ -16,7 +16,6 @@ import {
   useDisclosure,
   useColorMode
 } from "@chakra-ui/react";
-
 import {
   HamburgerIcon,
   CloseIcon,
@@ -281,4 +280,8 @@ const NAV_ITEMS: Array<NavItem> = [
     label: "Pay Fees",
     href: "/company/pay/circle",
   },
+  {
+    label: "Build VCResume",
+    href: "/resume",
+  }
 ]

@@ -6,6 +6,10 @@
 
 In a digital landscape fraught with work fraud and credential misrepresentation, W5Employee 👨🏻‍💻 emerges as a groundbreaking solution. This project harnesses the power of DIDs (Decentralized Identifiers) and Verified Credentials within the realm of Web5.0, creating a secure and verifiable system for work credentials in the Fin-Tech industry.
 
+<a href="https://developer.tbd.website/docs/web5/learn/decentralized-identifiers">Decentralized Identifiers (DID)</a> - The app generates a DID to identify you when you first launch it. This is stored in the browser and acts as your identity.
+
+<a href="https://developer.tbd.website/docs/web5/learn/decentralized-web-nodes">Decentralized Web Nodes (DWN)</a> - A DWN is created in the browser to store your data encrypted securely. We use it to store uploaded files.
+
 ### Problem Statement
 
 Work fraud and credential misrepresentation have become pervasive issues, causing concerns about the authenticity of academic and professional qualifications. Counterfeit degrees and identity theft further contribute to the lack of trust in the verification process. W5Employee 👨🏻‍💻 addresses these challenges head-on, revolutionizing the way work credentials are handled and authenticated.

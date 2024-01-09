@@ -94,7 +94,7 @@ export default function Resume() {
       </div>
       <section className="print:left-0 print:w-full">
         <div
-          className={`border-black border-2 my-48 print:border-none h-[267mm] lg:fixed lg:-top-24  transform transition-transform duration-300 ${MAP_SCALE_VALUES_TO_TAILWIND_STYLE[zoom]}`}
+          className={`border-orange-400 border-2 my-48 print:border-none h-[267mm] lg:fixed lg:-top-24  transform transition-transform duration-300 ${MAP_SCALE_VALUES_TO_TAILWIND_STYLE[zoom]}`}
           id="container"
         >
           <TemplateRenderer
